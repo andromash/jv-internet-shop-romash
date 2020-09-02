@@ -1,12 +1,12 @@
-package com.shop.db;
+package com.internet.shop.db;
 
-import com.shop.model.Product;
+import com.internet.shop.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Storage {
-    private static long productId = 0;
+    private static Long productId = 0L;
     public static final List<Product> products = new ArrayList<>();
 
     public static void addProduct(Product product) {
