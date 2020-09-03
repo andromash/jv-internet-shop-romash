@@ -7,15 +7,15 @@ public class Product {
     private String name;
     private BigDecimal price;
 
-    public Product(String name, double price) {
+    public Product(String name, BigDecimal price) {
         this.name = name;
-        this.price = BigDecimal.valueOf(price);
+        this.price = price;
     }
 
     public Product(Product product) {
         this.id = product.getId();
         this.name = product.getName();
-        this.price = BigDecimal.valueOf(product.getPrice());
+        this.price = product.getPrice();
     }
 
     public Long getId() {
@@ -34,12 +34,12 @@ public class Product {
         this.name = name;
     }
 
-    public double getPrice() {
-        return price.doubleValue();
+    public BigDecimal getPrice() {
+        return price;
     }
 
-    public void setPrice(double price) {
-        this.price = BigDecimal.valueOf(price);
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     @Override
