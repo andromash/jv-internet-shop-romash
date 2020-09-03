@@ -5,6 +5,7 @@ import com.internet.shop.db.Storage;
 import com.internet.shop.lib.Dao;
 import com.internet.shop.model.Product;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Dao
@@ -29,11 +30,12 @@ public class ProductDaoImpl implements ProductDao {
 
     @Override
     public Product update(Product product) {
-        return Storage.products.stream()
-                .filter(n -> n.getId().equals(product.getId()))
-                .map(p -> p = product)
-                .findFirst()
-                .orElseThrow();
+        for (int i = 0; i < Storage.products.size(); i++) {
+            if (Storage.products.get(i).getId().equals(product.getId())) {
+                return Storage.products.set(i, product);
+            }
+        }
+        throw new NoSuchElementException("No element with such ID in storage");
     }
 
     @Override

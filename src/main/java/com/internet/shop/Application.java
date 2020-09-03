@@ -19,7 +19,7 @@ public class Application {
             System.out.println(product);
         }
         System.out.println("Changing price of green tea:");
-        Product greenTeaProduct = productService.get(GREEN_TEA_ID);
+        Product greenTeaProduct = new Product(productService.get(GREEN_TEA_ID));
         greenTeaProduct.setPrice(greenTeaProduct.getPrice() * 0.85);
         productService.update(greenTeaProduct);
         System.out.println(productService.get(GREEN_TEA_ID));

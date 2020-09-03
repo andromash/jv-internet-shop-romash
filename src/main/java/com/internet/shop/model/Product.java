@@ -10,6 +10,12 @@ public class Product {
         this.price = price;
     }
 
+    public Product(Product product) {
+        this.id = product.getId();
+        this.name = product.getName();
+        this.price = product.getPrice();
+    }
+
     public Long getId() {
         return id;
     }
