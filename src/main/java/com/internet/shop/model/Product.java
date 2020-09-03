@@ -1,19 +1,21 @@
 package com.internet.shop.model;
 
+import java.math.BigDecimal;
+
 public class Product {
     private Long id;
     private String name;
-    private Double price;
+    private BigDecimal price;
 
-    public Product(String name, Double price) {
+    public Product(String name, double price) {
         this.name = name;
-        this.price = price;
+        this.price = BigDecimal.valueOf(price);
     }
 
     public Product(Product product) {
         this.id = product.getId();
         this.name = product.getName();
-        this.price = product.getPrice();
+        this.price = BigDecimal.valueOf(product.getPrice());
     }
 
     public Long getId() {
@@ -32,12 +34,12 @@ public class Product {
         this.name = name;
     }
 
-    public Double getPrice() {
-        return price;
+    public double getPrice() {
+        return price.doubleValue();
     }
 
-    public void setPrice(Double price) {
-        this.price = price;
+    public void setPrice(double price) {
+        this.price = BigDecimal.valueOf(price);
     }
 
     @Override
