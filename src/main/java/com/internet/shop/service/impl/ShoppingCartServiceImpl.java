@@ -21,9 +21,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCart addProduct(ShoppingCart shoppingCart, Product product) {
-        List<Product> products = shoppingCart.getProducts();
-        products.add(product);
-        shoppingCart.setProducts(products);
+        shoppingCart.getProducts().add(product);
         return shoppingCartDao.update(shoppingCart);
     }
 
