@@ -68,6 +68,10 @@ public class Application {
         OrderService orderService = (OrderService) injector.getInstance(OrderService.class);
         orderService.completeOrder(shoppingCartOfAndrii);
         orderService.completeOrder(shoppingCartOfAnna);
+        System.out.println(orderService.getUserOrders(andrii.getId()));
+        System.out.println(orderService.getUserOrders(anna.getId()));
+        System.out.println("Deleting Anna's order..");
+        orderService.delete(anna.getId());
         System.out.println(orderService.getAll());
     }
 }

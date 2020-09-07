@@ -13,9 +13,6 @@ public class Order {
         this.userId = userId;
     }
 
-    public Order() {
-    }
-
     public Long getId() {
         return id;
     }
