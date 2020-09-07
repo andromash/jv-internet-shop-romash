@@ -9,7 +9,7 @@ public interface OrderDao {
 
     Optional<Order> get(Long id);
 
-    List<Order> getOrdersOfUser(Long id);
+    List<Order> getOrdersOfUser(Long userId);
 
     List<Order> getAll();
 
