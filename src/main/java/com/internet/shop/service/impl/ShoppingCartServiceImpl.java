@@ -7,7 +7,6 @@ import com.internet.shop.model.Product;
 import com.internet.shop.model.ShoppingCart;
 import com.internet.shop.service.ShoppingCartService;
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
@@ -27,9 +26,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public boolean deleteProduct(ShoppingCart shoppingCart, Product product) {
-        List<Product> products = shoppingCart.getProducts();
-        boolean remove = products.remove(product);
-        shoppingCart.setProducts(products);
+        boolean remove = shoppingCart.getProducts().remove(product);
         shoppingCartDao.update(shoppingCart);
         return remove;
     }
@@ -42,7 +39,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCart getByUserId(Long userId) {
-        return shoppingCartDao.getByUser(userId).orElseThrow();
+        return shoppingCartDao.getByUser(userId).get();
     }
 
     @Override
