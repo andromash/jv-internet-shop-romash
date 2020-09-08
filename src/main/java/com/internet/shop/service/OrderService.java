@@ -9,4 +9,3 @@ public interface OrderService extends GenericService<Order, Long> {
 
     List<Order> getUserOrders(Long userId);
 }
-
