@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "currentCart", urlPatterns = "/current/cart")
-public class CurrentCartController extends HttpServlet {
+public class GetCurrentCartController extends HttpServlet {
     private static final long USER_ID = 1;
     private static final Injector injector = Injector.getInstance("com.internet.shop");
     private ShoppingCartService shoppingCartService
