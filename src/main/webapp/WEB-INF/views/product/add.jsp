@@ -6,7 +6,7 @@
 <body>
 <h1>Enter information about new product</h1>
 <h4 style="color: red">${message}</h4>
-<form method="post" action="${pageContext.request.contextPath}/product/new">
+<form method="post" action="${pageContext.request.contextPath}/product/add">
 <table>
     <tr>
         <td>

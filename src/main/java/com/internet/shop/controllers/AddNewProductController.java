@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/product/new")
+@WebServlet("/product/add")
 public class AddNewProductController extends HttpServlet {
     private static final Injector injector = Injector.getInstance("com.internet.shop");
     private ProductService productService
@@ -35,6 +35,5 @@ public class AddNewProductController extends HttpServlet {
             req.setAttribute("message", "You entered invalid price format");
             req.getRequestDispatcher("/WEB-INF/views/product/add.jsp").forward(req, resp);
         }
-
     }
 }
