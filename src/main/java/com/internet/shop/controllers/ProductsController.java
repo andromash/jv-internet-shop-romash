@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "products", urlPatterns = "/product/all")
-public class ProductsController extends HttpServlet {
+public class GetAllProductsController extends HttpServlet {
     private static final Injector injector = Injector.getInstance("com.internet.shop");
     private ProductService productService
             = (ProductService) injector.getInstance(ProductService.class);
