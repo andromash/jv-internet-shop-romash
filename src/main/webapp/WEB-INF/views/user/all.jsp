@@ -23,7 +23,7 @@
                 <c:out value="${user.login}"/>
             </td>
             <td>
-                <form action="${pageContext.request.contextPath}/deleteUser" method="get">
+                <form action="${pageContext.request.contextPath}/delete-user" method="get">
                     <input type="hidden" name="userId" value="${user.id}">
                     <button type="submit">Delete user ${user.login}</button>
                 </form>
