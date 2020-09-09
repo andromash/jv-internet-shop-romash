@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = "/user/delete")
+@WebServlet("/user/delete")
 public class DeleteUserController extends HttpServlet {
     private static final Injector injector = Injector.getInstance("com.internet.shop");
     private UserService userService = (UserService) injector.getInstance(UserService.class);

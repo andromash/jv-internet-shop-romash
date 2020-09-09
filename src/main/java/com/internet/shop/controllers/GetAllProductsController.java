@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet(urlPatterns = "/product/all")
+@WebServlet("/product/all")
 public class GetAllProductsController extends HttpServlet {
     private static final Injector injector = Injector.getInstance("com.internet.shop");
     private ProductService productService
