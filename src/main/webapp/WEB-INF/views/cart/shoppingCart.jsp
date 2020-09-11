@@ -29,7 +29,10 @@
     </c:forEach>
     <tr>
         <td>
-            <a href="${pageContext.request.contextPath}/order/complete">Complete order</a>
+            <form action="${pageContext.request.contextPath}/order/complete" method="post">
+                <input type="hidden" name="cartId" value="${cartId}">
+                <button type="submit">Create order</button>
+            </form>
         </td>
     </tr>
 </table>

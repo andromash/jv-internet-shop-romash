@@ -18,6 +18,9 @@
             <td>
                 <c:out value="${order.products}"/>
             </td>
+            <td>
+                <a href="${pageContext.request.contextPath}/user/order?id=${orderId}"></a>
+            </td>
         </tr>
     </c:forEach>
 </table>

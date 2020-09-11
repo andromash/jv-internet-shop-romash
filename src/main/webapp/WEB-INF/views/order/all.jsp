@@ -23,6 +23,9 @@
                 <c:out value="${order.userId}"/>
             </td>
             <td>
+                <a href="${pageContext.request.contextPath}/user/order?id=${orderId}">Details</a>
+            </td>
+            <td>
                 <form action="${pageContext.request.contextPath}/order/delete" method="get">
                     <input type="hidden" name="orderId" value="${order.id}">
                     <button type="submit">Delete order</button>
