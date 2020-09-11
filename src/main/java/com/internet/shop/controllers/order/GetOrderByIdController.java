@@ -4,14 +4,13 @@ import com.internet.shop.lib.Injector;
 import com.internet.shop.model.Order;
 import com.internet.shop.model.Product;
 import com.internet.shop.service.OrderService;
-
+import java.io.IOException;
+import java.math.BigDecimal;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.math.BigDecimal;
 
 @WebServlet("/user/order")
 public class GetOrderByIdController extends HttpServlet {
