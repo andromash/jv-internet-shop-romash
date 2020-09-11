@@ -7,9 +7,9 @@
           crossorigin="anonymous">
 </head>
 <body>
-<h1>Enter information about new product</h1>
-<h4 class="container-md">${message}</h4>
 <div class="container">
+    <h1>Enter information about new product</h1>
+    <h4 class="container-md">${message}</h4>
     <form method="post" action="${pageContext.request.contextPath}/product/add">
         <table class="table table-striped table-hover">
             <tr>
