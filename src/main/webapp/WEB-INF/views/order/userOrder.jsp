@@ -3,39 +3,44 @@
 <html>
 <head>
     <title>Order</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+          crossorigin="anonymous">
 </head>
 <body>
-<table>
-    <tr>
-        <td>
-            <label>Order ID</label>
-        </td>
-        <td>
-            <p>${order.id}</p>
-        </td>
-    </tr>
-    <tr>
-        <th>Product name</th>
-        <th>Price</th>
-    </tr>
-    <c:forEach var="product" items="${order.products}">
+<div class="container">
+    <table class="table table-striped table-hover">
         <tr>
             <td>
-                <c:out value="${product.name}"/>
+                <label>Order ID</label>
             </td>
             <td>
-                <c:out value="${product.price}"/>
+                <p>${order.id}</p>
             </td>
         </tr>
-    </c:forEach>
-    <tr>
-        <td>
-            <label>Total sum</label>
-        </td>
-        <td>
-            <p><b>${total}</b></p>
-        </td>
-    </tr>
-</table>
+        <tr class="primary">
+            <th>Product name</th>
+            <th>Price</th>
+        </tr>
+        <c:forEach var="product" items="${order.products}">
+            <tr>
+                <td>
+                    <c:out value="${product.name}"/>
+                </td>
+                <td>
+                    <c:out value="${product.price}"/>
+                </td>
+            </tr>
+        </c:forEach>
+        <tr class="success">
+            <td>
+                <label>Total sum</label>
+            </td>
+            <td>
+                <p><b>${total}</b></p>
+            </td>
+        </tr>
+    </table>
+</div>
 </body>
 </html>
