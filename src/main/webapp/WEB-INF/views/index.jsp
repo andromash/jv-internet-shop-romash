@@ -9,5 +9,6 @@
 <a href="${pageContext.request.contextPath}/user/all">All user</a><br>
 <a href="${pageContext.request.contextPath}/product/all">All products</a><br>
 <a href="${pageContext.request.contextPath}/product/add">Add product</a><br>
+<a href="${pageContext.request.contextPath}/orders/all">All orders</a><br>
 </body>
 </html>
