@@ -2,7 +2,6 @@ package com.internet.shop.controllers.order;
 
 import com.internet.shop.lib.Injector;
 import com.internet.shop.model.Order;
-import com.internet.shop.model.Product;
 import com.internet.shop.service.OrderService;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -24,9 +23,7 @@ public class GetOrderDetailsController extends HttpServlet {
         Long orderId = Long.valueOf(req.getParameter("id"));
         Order order = orderService.get(orderId);
         req.setAttribute("order", order);
-        BigDecimal totalSum = order.getProducts().stream()
-                .map(Product::getPrice)
-                .reduce(BigDecimal.valueOf(0), BigDecimal::add);
+        BigDecimal totalSum = orderService.getTotalSum(order);
         req.setAttribute("total", totalSum);
         req.getRequestDispatcher("/WEB-INF/views/order/userOrder.jsp").forward(req, resp);
     }

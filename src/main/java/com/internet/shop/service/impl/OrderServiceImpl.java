@@ -4,9 +4,11 @@ import com.internet.shop.dao.OrderDao;
 import com.internet.shop.lib.Inject;
 import com.internet.shop.lib.Service;
 import com.internet.shop.model.Order;
+import com.internet.shop.model.Product;
 import com.internet.shop.model.ShoppingCart;
 import com.internet.shop.service.OrderService;
 import com.internet.shop.service.ShoppingCartService;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -28,6 +30,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getUserOrders(Long userId) {
         return orderDao.getOrdersOfUser(userId);
+    }
+
+    @Override
+    public BigDecimal getTotalSum(Order order) {
+        return order.getProducts().stream()
+                .map(Product::getPrice)
+                .reduce(BigDecimal.valueOf(0), BigDecimal::add);
     }
 
     @Override
