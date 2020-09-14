@@ -1,4 +1,4 @@
-package com.internet.shop.controllers;
+package com.internet.shop.controllers.product;
 
 import com.internet.shop.lib.Injector;
 import com.internet.shop.model.Product;
@@ -30,7 +30,7 @@ public class AddNewProductController extends HttpServlet {
         String price = req.getParameter("price");
         if (price.matches("^\\d+(\\.\\d+)*$")) {
             productService.create(new Product(name, new BigDecimal(price)));
-            resp.sendRedirect(req.getContextPath() + "/index");
+            resp.sendRedirect(req.getContextPath() + "/product/add");
         } else {
             req.setAttribute("message", "You entered invalid price format");
             req.getRequestDispatcher("/WEB-INF/views/product/add.jsp").forward(req, resp);
