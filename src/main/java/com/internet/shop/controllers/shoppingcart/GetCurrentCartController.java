@@ -1,5 +1,6 @@
 package com.internet.shop.controllers.shoppingcart;
 
+import com.internet.shop.controllers.LoginController;
 import com.internet.shop.lib.Injector;
 import com.internet.shop.model.Product;
 import com.internet.shop.model.ShoppingCart;
@@ -14,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/cart/products")
 public class GetCurrentCartController extends HttpServlet {
-    private static final String USER_ID = "user_id";
     private static final Injector injector = Injector.getInstance("com.internet.shop");
     private ShoppingCartService shoppingCartService
             = (ShoppingCartService) injector.getInstance(ShoppingCartService.class);
@@ -22,7 +22,7 @@ public class GetCurrentCartController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        Long userId = (Long) req.getSession().getAttribute(USER_ID);
+        Long userId = (Long) req.getSession().getAttribute(LoginController.USER_ID);
         ShoppingCart currentShoppingCart = shoppingCartService.getByUserId(userId);
         List<Product> products = currentShoppingCart.getProducts();
         req.setAttribute("products", products);

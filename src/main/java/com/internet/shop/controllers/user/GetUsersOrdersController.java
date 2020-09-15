@@ -1,5 +1,6 @@
 package com.internet.shop.controllers.user;
 
+import com.internet.shop.controllers.LoginController;
 import com.internet.shop.lib.Injector;
 import com.internet.shop.model.Order;
 import com.internet.shop.service.OrderService;
@@ -13,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/user/orders")
 public class GetUsersOrdersController extends HttpServlet {
-    private static final String USER_ID = "user_id";
     private static final Injector injector = Injector.getInstance("com.internet.shop");
     private OrderService orderService
             = (OrderService) injector.getInstance(OrderService.class);
@@ -21,7 +21,7 @@ public class GetUsersOrdersController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        Long userId = (Long) req.getSession().getAttribute(USER_ID);
+        Long userId = (Long) req.getSession().getAttribute(LoginController.USER_ID);
         List<Order> userOrders = orderService.getUserOrders(userId);
         req.setAttribute("orders", userOrders);
         req.getRequestDispatcher("/WEB-INF/views/order/userOrders.jsp").forward(req, resp);
