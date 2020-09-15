@@ -7,6 +7,7 @@
           crossorigin="anonymous">
 </head>
 <body>
+<%@include file="../header.jsp" %>
 <div class="container">
     <h1>Enter information about new product</h1>
     <h4 class="container-md">${message}</h4>

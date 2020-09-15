@@ -8,6 +8,7 @@
           crossorigin="anonymous">
 </head>
 <body>
+<%@include file="../header.jsp" %>
 <div class="container">
     <table class="table table-striped table-hover">
         <tr>
