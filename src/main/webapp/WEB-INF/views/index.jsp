@@ -7,6 +7,7 @@
           crossorigin="anonymous">
 </head>
 <body>
+<%@include file="header.jsp" %>
 <div class="container-md">
     <h1>HELLO WORLD!</h1>
     <a href="${pageContext.request.contextPath}/registration">Sign up</a><br>
