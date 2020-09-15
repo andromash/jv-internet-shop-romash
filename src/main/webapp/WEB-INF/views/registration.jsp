@@ -31,9 +31,9 @@
         <button class="btn btn-primary" type="submit">Register</button>
     </form>
     <hr>
-    <a href="${pageContext.request.contextPath}/index" class="page-link">Main page</a><br>
-    <a href="${pageContext.request.contextPath}/user/all" class="page-link">All user</a><br>
-    <a href="${pageContext.request.contextPath}/product/all" class="page-link">All products</a><br>
+    <a href="${pageContext.request.contextPath}/index">Main page</a><br>
+    <a href="${pageContext.request.contextPath}/user/all">All user</a><br>
+    <a href="${pageContext.request.contextPath}/product/all">All products</a><br>
     <hr>
 </div>
 </body>
