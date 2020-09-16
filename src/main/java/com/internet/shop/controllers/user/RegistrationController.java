@@ -37,7 +37,7 @@ public class RegistrationController extends HttpServlet {
 
         if (password.equals(passwordRepeated)) {
             User user = new User(name, login, password);
-            if(login.equals("admin")) {
+            if (login.equals("admin")) {
                 user.setRoles(Set.of(Role.of("ADMIN")));
             } else {
                 user.setRoles(Set.of(Role.of("USER")));
