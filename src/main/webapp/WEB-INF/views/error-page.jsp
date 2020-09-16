@@ -11,7 +11,7 @@
         width: 100%;
         height: 70%;
         background-image: url("https://coubsecure-s.akamaihd.net/get/b157/p/coub/simple/cw_timeline_pic/05cb2758c8c/d34f7b33e6d5000c653a2/med_1520189058_image.jpg");
-        background-repeat: inherit;
+        background-size: cover;
     }
 </style>
 <body>

@@ -4,6 +4,7 @@ import com.internet.shop.exception.AuthenticationException;
 import com.internet.shop.lib.Injector;
 import com.internet.shop.model.User;
 import com.internet.shop.security.AuthenticationService;
+import com.internet.shop.service.UserService;
 import java.io.IOException;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -18,11 +19,17 @@ public class LoginController extends HttpServlet {
     private static final Injector injector = Injector.getInstance("com.internet.shop");
     private final AuthenticationService authService
             = (AuthenticationService) injector.getInstance(AuthenticationService.class);
+    private final UserService userService
+            = (UserService) injector.getInstance(UserService.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
+        if (userService.findByLogin("testAdmin").isPresent()) {
+            req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/admin/add");
+        }
     }
 
     @Override

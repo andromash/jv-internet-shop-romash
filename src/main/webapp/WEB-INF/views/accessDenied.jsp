@@ -11,7 +11,8 @@
         width: 100%;
         height: 70%;
         background-image: url("https://miro.medium.com/max/4000/1*tq4lu1zhnvhRloNTETojIw.jpeg");
-        background-repeat: inherit;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 </style>
 <body>

@@ -15,11 +15,9 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebFilter("/*")
 public class AuthorizationFilter implements Filter {
     private static final Injector injector = Injector.getInstance("com.internet.shop");
     private UserService userService
@@ -31,6 +29,7 @@ public class AuthorizationFilter implements Filter {
         protectedUrls.put("/user/all", List.of(Role.RoleName.ADMIN));
         protectedUrls.put("/user/delete", List.of(Role.RoleName.ADMIN));
         protectedUrls.put("/orders/all", List.of(Role.RoleName.ADMIN));
+        protectedUrls.put("/order/delete", List.of(Role.RoleName.ADMIN));
         protectedUrls.put("/admin/product/all", List.of(Role.RoleName.ADMIN));
         protectedUrls.put("/product/add", List.of(Role.RoleName.ADMIN));
         protectedUrls.put("/product/delete", List.of(Role.RoleName.ADMIN));
@@ -38,6 +37,7 @@ public class AuthorizationFilter implements Filter {
         protectedUrls.put("/shopping-cart/product/delete", List.of(Role.RoleName.USER));
         protectedUrls.put("/cart/products", List.of(Role.RoleName.USER));
         protectedUrls.put("/user/orders", List.of(Role.RoleName.USER));
+        protectedUrls.put("/product/buy", List.of(Role.RoleName.USER));
     }
 
     @Override
@@ -46,13 +46,8 @@ public class AuthorizationFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
         HttpServletResponse resp = (HttpServletResponse) servletResponse;
         String url = req.getServletPath();
-        if (!protectedUrls.containsKey(url)) {
-            filterChain.doFilter(req, resp);
-            return;
-        }
         Long userId = (Long) req.getSession().getAttribute(LoginController.USER_ID);
-        User user = userService.get(userId);
-        if (isAuthorized(user, protectedUrls.get(url))) {
+        if (!protectedUrls.containsKey(url) || isAuthorized(userService.get(userId), protectedUrls.get(url))) {
             filterChain.doFilter(req, resp);
         } else {
             req.getRequestDispatcher("/WEB-INF/views/accessDenied.jsp").forward(req, resp);
