@@ -8,7 +8,7 @@ import java.util.Properties;
 public class ConnectionUtil {
     static {
         try {
-            Class.forName("com.mysql.jdbc.driver");
+            Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             throw new RuntimeException("Can't find MySQL Driver", e);
         }
@@ -18,10 +18,14 @@ public class ConnectionUtil {
         Connection conn;
         Properties connectionProps = new Properties();
         connectionProps.put("user","root");
-        connectionProps.put("password", 12345678);
-        String url = "jdbc:mysql://localhost:3306/internet_shop?useSSL=false";
+        connectionProps.put("password", "12345678");
+        String url = "jdbc:mysql://localhost:3306/internet_shop?serverTimezone=UTC";
 
-        conn = DriverManager.getConnection(url, connectionProps);
+        try {
+            conn = DriverManager.getConnection(url, connectionProps);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return conn;
     }
 }

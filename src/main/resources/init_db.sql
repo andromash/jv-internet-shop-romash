@@ -10,5 +10,3 @@ CREATE TABLE `internet_shop`.`products`
     UNIQUE INDEX `id_UNIQUE` (`product_id` ASC) VISIBLE,
     UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE
 );
-
-
