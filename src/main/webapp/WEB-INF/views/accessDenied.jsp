@@ -10,14 +10,15 @@
     #oops {
         width: 100%;
         height: 70%;
-        background-image: url("https://coubsecure-s.akamaihd.net/get/b157/p/coub/simple/cw_timeline_pic/05cb2758c8c/d34f7b33e6d5000c653a2/med_1520189058_image.jpg");
+        background-image: url("https://miro.medium.com/max/4000/1*tq4lu1zhnvhRloNTETojIw.jpeg");
+        background-repeat: no-repeat;
         background-size: cover;
     }
 </style>
 <body>
 <div class="container">
-    <h1 class="alert-danger"> Oops!.. I did it again, i played with your heart</h1>
-    <h2 class="alert-danger">Something went wrong with input parameter</h2>
+    <h1 class="danger"> Sorry! You have been stopped by border control</h1>
+    <h2 class="danger">You do not have permission to visit this page</h2>
     <div  id="oops">
     </div>
 </div>
