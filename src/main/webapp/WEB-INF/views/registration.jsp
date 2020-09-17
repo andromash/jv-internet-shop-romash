@@ -31,6 +31,7 @@
         <button class="btn btn-primary" type="submit">Register</button>
     </form>
     <hr>
+    <a href="${pageContext.request.contextPath}/admin/add">Add admin</a><br>
     <a href="${pageContext.request.contextPath}/index">Main page</a><br>
     <a href="${pageContext.request.contextPath}/user/all">All user</a><br>
     <a href="${pageContext.request.contextPath}/product/all">All products</a><br>

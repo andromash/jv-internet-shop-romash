@@ -25,11 +25,7 @@ public class LoginController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        if (userService.findByLogin("testAdmin").isPresent()) {
-            req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/admin/add");
-        }
+        req.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(req, resp);
     }
 
     @Override
