@@ -13,7 +13,7 @@ public class ShoppingCartDaoImpl implements ShoppingCartDao {
     @Override
     public ShoppingCart create(ShoppingCart shoppingCart) {
         Storage.addShoppingCart(shoppingCart);
-        return shoppingCart;
+        return getByUser(shoppingCart.getUserId()).get();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.internet.shop.dao.jdbc;
 
 import com.internet.shop.dao.ProductDao;
+import com.internet.shop.exception.DataProcessingException;
 import com.internet.shop.lib.Dao;
 import com.internet.shop.model.Product;
 import com.internet.shop.util.ConnectionUtil;
@@ -30,29 +31,27 @@ public class ProductDaoJdbcImpl implements ProductDao {
                 item.setId(resultSet.getLong(1));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataProcessingException("Can not add item to DB", e);
         }
-
         return item;
     }
 
     @Override
     public Optional<Product> get(Long id) {
-        Product product = null;
+        Product product;
         try (Connection connection = ConnectionUtil.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT product_id, name, price "
-                            + "FROM products WHERE deleted = 0 AND product_id=?");
-            statement.setString(1, String.valueOf(id));
+                    "SELECT * FROM products WHERE deleted=0 AND product_id=?");
+            statement.setLong(1, id);
             ResultSet rs = statement.executeQuery();
-            long productId = rs.getLong("product_id");
+            long productId = rs.getInt("product_id");
             String name = rs.getString("name");
             BigDecimal price = rs.getBigDecimal("price");
             product = new Product(productId, name, price);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataProcessingException("Can not get item from DB", e);
         }
-        return Optional.ofNullable(product);
+        return Optional.of(product);
     }
 
     @Override
@@ -68,7 +67,7 @@ public class ProductDaoJdbcImpl implements ProductDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataProcessingException("Can not get items from DB", e);
         }
         return products;
     }
@@ -83,7 +82,7 @@ public class ProductDaoJdbcImpl implements ProductDao {
             statement.setString(3, String.valueOf(item.getId()));
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataProcessingException("Can not update item in DB", e);
         }
         return item;
     }
@@ -99,7 +98,7 @@ public class ProductDaoJdbcImpl implements ProductDao {
                 return true;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataProcessingException("Can not access item to DB", e);
         }
         return false;
     }
