@@ -30,28 +30,27 @@ public class ProductDaoJdbcImpl implements ProductDao {
             if (resultSet.next()) {
                 item.setId(resultSet.getLong(1));
             }
+            return item;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can not add item to DB", e);
+            throw new DataProcessingException("Couldn't create product - " + item, e);
         }
-        return item;
     }
 
     @Override
     public Optional<Product> get(Long id) {
-        Product product;
+        Product product = null;
         try (Connection connection = ConnectionUtil.getConnection()) {
             PreparedStatement statement = connection.prepareStatement(
-                    "SELECT * FROM products WHERE deleted=0 AND product_id=?");
+                    "SELECT * FROM products WHERE deleted = 0 AND product_id = ?");
             statement.setLong(1, id);
             ResultSet rs = statement.executeQuery();
-            long productId = rs.getInt("product_id");
-            String name = rs.getString("name");
-            BigDecimal price = rs.getBigDecimal("price");
-            product = new Product(productId, name, price);
+            while (rs.next()) {
+                product = extractProductFromResultSet(rs);
+            }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can not get item from DB", e);
+            throw new DataProcessingException("Can not get product from DB with ID = " + id, e);
         }
-        return Optional.of(product);
+        return Optional.ofNullable(product);
     }
 
     @Override
@@ -81,10 +80,10 @@ public class ProductDaoJdbcImpl implements ProductDao {
             statement.setString(2, String.valueOf(item.getPrice()));
             statement.setString(3, String.valueOf(item.getId()));
             statement.executeUpdate();
+            return item;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can not update item in DB", e);
+            throw new DataProcessingException("Couldn't update product - " + item, e);
         }
-        return item;
     }
 
     @Override
@@ -94,13 +93,10 @@ public class ProductDaoJdbcImpl implements ProductDao {
                     "UPDATE products SET deleted = 1 WHERE product_id = ?");
             statement.setString(1, String.valueOf(id));
             int i = statement.executeUpdate();
-            if (i == 1) {
-                return true;
-            }
+            return i == 1;
         } catch (SQLException e) {
-            throw new DataProcessingException("Can not access item to DB", e);
+            throw new DataProcessingException("Couldn't delete product with ID = " + id, e);
         }
-        return false;
     }
 
     private Product extractProductFromResultSet(ResultSet rs) throws SQLException {
