@@ -15,17 +15,14 @@ public class ConnectionUtil {
     }
 
     public static Connection getConnection() throws SQLException {
-        Connection conn;
         Properties connectionProps = new Properties();
         connectionProps.put("user","root");
         connectionProps.put("password", "12345678");
         String url = "jdbc:mysql://localhost:3306/internet_shop?serverTimezone=UTC";
-
         try {
-            conn = DriverManager.getConnection(url, connectionProps);
+            return DriverManager.getConnection(url, connectionProps);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return conn;
     }
 }
