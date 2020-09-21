@@ -18,21 +18,21 @@ import java.util.Optional;
 @Dao
 public class ProductDaoJdbcImpl implements ProductDao {
     @Override
-    public Product create(Product item) {
+    public Product create(Product product) {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(
                         "INSERT INTO products(name, price) VALUES (?, ?)",
                             Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, item.getName());
-            statement.setBigDecimal(2, item.getPrice());
+            statement.setString(1, product.getName());
+            statement.setBigDecimal(2, product.getPrice());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
-                item.setId(resultSet.getLong(1));
+                product.setId(resultSet.getLong(1));
             }
-            return item;
+            return product;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't create product - " + item, e);
+            throw new DataProcessingException("Couldn't create product - " + product, e);
         }
     }
 
@@ -58,7 +58,7 @@ public class ProductDaoJdbcImpl implements ProductDao {
         List<Product> products = new ArrayList<>();
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(
-                        "SELECT * FROM products WHERE deleted = 0")) {
+                        "SELECT * FROM products WHERE deleted = false")) {
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 Product product = extractProductFromResultSet(rs);
@@ -71,17 +71,17 @@ public class ProductDaoJdbcImpl implements ProductDao {
     }
 
     @Override
-    public Product update(Product item) {
+    public Product update(Product product) {
         try (Connection connection = ConnectionUtil.getConnection();
                  PreparedStatement statement = connection.prepareStatement(
                         "UPDATE products SET name = ?, price = ? WHERE product_id = ?")) {
-            statement.setString(1, item.getName());
-            statement.setString(2, String.valueOf(item.getPrice()));
-            statement.setString(3, String.valueOf(item.getId()));
+            statement.setString(1, product.getName());
+            statement.setString(2, String.valueOf(product.getPrice()));
+            statement.setString(3, String.valueOf(product.getId()));
             statement.executeUpdate();
-            return item;
+            return product;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't update product - " + item, e);
+            throw new DataProcessingException("Couldn't update product - " + product, e);
         }
     }
 
