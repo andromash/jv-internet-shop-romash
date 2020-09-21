@@ -38,19 +38,18 @@ public class ProductDaoJdbcImpl implements ProductDao {
 
     @Override
     public Optional<Product> get(Long id) {
-        Product product = null;
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(
                         "SELECT * FROM products WHERE deleted = 0 AND product_id = ?")) {
             statement.setLong(1, id);
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                product = extractProductFromResultSet(rs);
+                return Optional.of(extractProductFromResultSet(rs));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get product from DB with ID = " + id, e);
         }
-        return Optional.ofNullable(product);
+        return Optional.empty();
     }
 
     @Override
