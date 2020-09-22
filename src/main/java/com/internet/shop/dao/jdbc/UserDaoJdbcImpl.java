@@ -133,7 +133,7 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     private Set<Role> getRolesOfUser(Long userId) {
-        String query = "SELECT role_name FROM roles r INNER JOIN users_roles ur "
+        String query = "SELECT role_id, role_name FROM roles r INNER JOIN users_roles ur "
                 + "ON ur.role_id = r.role_id WHERE ur.user_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -141,8 +141,10 @@ public class UserDaoJdbcImpl implements UserDao {
             ResultSet rs = statement.executeQuery();
             Set<Role> roles = new HashSet<>();
             while (rs.next()) {
+                Long roleId = rs.getLong("role_id");
                 String roleName = rs.getString("role_name");
                 Role role = Role.of(roleName);
+                role.setId(roleId);
                 roles.add(role);
             }
             return roles;
