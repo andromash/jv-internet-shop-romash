@@ -94,8 +94,6 @@ public class ShoppingCartDaoJdbcImpl implements ShoppingCartDao {
     @Override
     public ShoppingCart update(ShoppingCart shoppingCart) {
         String queryToDeleteProducts = "DELETE FROM shopping_carts_products WHERE cart_id = ?;";
-        String queryToUpdateProducts = "INSERT INTO shopping_carts_products(cart_id, product_id) "
-                + "VALUES(?,?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(queryToDeleteProducts)) {
             statement.setLong(1, shoppingCart.getId());
@@ -104,17 +102,7 @@ public class ShoppingCartDaoJdbcImpl implements ShoppingCartDao {
             throw new DataProcessingException("Couldn't delete products from shopping cart - "
                     + shoppingCart, e);
         }
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(queryToUpdateProducts)) {
-            for (int i = 0; i < shoppingCart.getProducts().size(); i++) {
-                statement.setLong(1, shoppingCart.getId());
-                statement.setLong(2, shoppingCart.getProducts().get(i).getId());
-                statement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't update shopping cart - " + shoppingCart, e);
-        }
-        return shoppingCart;
+        return insertProducts(shoppingCart);
     }
 
     @Override
@@ -126,6 +114,22 @@ public class ShoppingCartDaoJdbcImpl implements ShoppingCartDao {
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't delete shopping cart with ID = " + id, e);
+        }
+    }
+
+    private ShoppingCart insertProducts(ShoppingCart shoppingCart) {
+        String queryToUpdateProducts = "INSERT INTO shopping_carts_products(cart_id, product_id) "
+                + "VALUES(?,?);";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(queryToUpdateProducts)) {
+            for (int i = 0; i < shoppingCart.getProducts().size(); i++) {
+                statement.setLong(1, shoppingCart.getId());
+                statement.setLong(2, shoppingCart.getProducts().get(i).getId());
+                statement.executeUpdate();
+            }
+            return shoppingCart;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't update shopping cart - " + shoppingCart, e);
         }
     }
 

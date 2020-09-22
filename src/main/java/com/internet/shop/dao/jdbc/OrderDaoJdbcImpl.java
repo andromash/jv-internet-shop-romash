@@ -51,7 +51,7 @@ public class OrderDaoJdbcImpl implements OrderDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't create order - " + order, e);
         }
-        return insertProductsToOrder(order);
+        return insertProducts(order);
     }
 
     @Override
@@ -97,7 +97,7 @@ public class OrderDaoJdbcImpl implements OrderDao {
             throw new DataProcessingException("Couldn't delete product from shopping cart - "
                     + order, e);
         }
-        return insertProductsToOrder(order);
+        return insertProducts(order);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class OrderDaoJdbcImpl implements OrderDao {
         }
     }
 
-    private Order insertProductsToOrder(Order order) {
+    private Order insertProducts(Order order) {
         String queryToUpdateProducts = "INSERT INTO orders_products(order_id, product_id) "
                 + "VALUES(?,?);";
         try (Connection connection = ConnectionUtil.getConnection();
