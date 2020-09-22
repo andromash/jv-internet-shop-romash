@@ -155,7 +155,7 @@ public class UserDaoJdbcImpl implements UserDao {
         String queryToUpdateRoles = "INSERT INTO users_roles(user_id, role_id) "
                 + "VALUES(?,(SELECT role_id FROM roles WHERE role_name = ?)); ";
         try (Connection connection = ConnectionUtil.getConnection();
-             PreparedStatement statement = connection.prepareStatement(queryToUpdateRoles)) {
+                PreparedStatement statement = connection.prepareStatement(queryToUpdateRoles)) {
             for (Role role : user.getRoles()) {
                 statement.setLong(1, user.getId());
                 statement.setString(2, role.getRoleName().name());
