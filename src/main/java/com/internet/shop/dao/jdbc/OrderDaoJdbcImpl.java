@@ -25,15 +25,15 @@ public class OrderDaoJdbcImpl implements OrderDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, userId);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                orders.add(extractOrderFromResultSet(rs));
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                orders.add(extractOrderFromResultSet(resultSet));
             }
         } catch (SQLException e) {
-            throw new DataProcessingException("Can not get order from DB with user ID = "
+            throw new DataProcessingException("Can not get orders from DB with user ID = "
                     + userId, e);
         }
-        for(Order order : orders) {
+        for (Order order : orders) {
             order.setProducts(extractProductsFromOrder(order.getId()));
         }
         return orders;
@@ -64,9 +64,9 @@ public class OrderDaoJdbcImpl implements OrderDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                order = extractOrderFromResultSet(rs);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                order = extractOrderFromResultSet(resultSet);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get order from DB with ID = " + id, e);
@@ -78,20 +78,18 @@ public class OrderDaoJdbcImpl implements OrderDao {
     @Override
     public List<Order> getAll() {
         List<Order> orders = new ArrayList<>();
-        ResultSet rs;
         String query = "SELECT * FROM orders;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            rs = statement.executeQuery();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can not get orders from DB", e);
-        }
-        try {
-            while (rs.next()) {
-                orders.add(extractOrderFromResultSet(rs));
+            ResultSet resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                orders.add(extractOrderFromResultSet(resultSet));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get orders from DB", e);
+        }
+        for (Order order : orders) {
+            order.setProducts(extractProductsFromOrder(order.getId()));
         }
         return orders;
     }

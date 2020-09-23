@@ -22,10 +22,7 @@ public class UserDaoJdbcImpl implements UserDao {
     @Override
     public Optional<User> findByLogin(String login) {
         User user = new User();
-        String query = "SELECT * FROM users u\n"
-                + "INNER JOIN users_roles ur ON u.user_id = ur.user_id\n"
-                + "INNER JOIN roles r ON ur.role_id = r.role_id\n"
-                + "WHERE u.deleted = false AND u.login = ?;";
+        String query = "SELECT * FROM users WHERE deleted = false AND login = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, login);
@@ -107,7 +104,6 @@ public class UserDaoJdbcImpl implements UserDao {
     @Override
     public User update(User user) {
         String query = "UPDATE users SET name = ?, login = ?, password = ? WHERE user_id = ?;";
-        String queryToDeleteRoles = "DELETE FROM users_roles WHERE user_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, user.getName());
@@ -118,14 +114,7 @@ public class UserDaoJdbcImpl implements UserDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update user " + user, e);
         }
-        try (Connection connection = ConnectionUtil.getConnection();
-                PreparedStatement statement = connection.prepareStatement(queryToDeleteRoles)) {
-            statement.setLong(1, user.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete roles of user with ID = "
-                    + user.getId(), e);
-        }
+        deleteRoles(user.getId());
         insertRoles(user);
         user.setRoles(getRolesOfUser(user.getId()));
         return user;
@@ -140,6 +129,18 @@ public class UserDaoJdbcImpl implements UserDao {
             return statement.executeUpdate() == 1;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't delete user with ID = " + id, e);
+        }
+    }
+
+    private boolean deleteRoles(Long userId) {
+        String queryToDeleteRoles = "DELETE FROM users_roles WHERE user_id = ?;";
+        try (Connection connection = ConnectionUtil.getConnection();
+                PreparedStatement statement = connection.prepareStatement(queryToDeleteRoles)) {
+            statement.setLong(1, userId);
+            return statement.executeUpdate() == 1;
+        } catch (SQLException e) {
+            throw new DataProcessingException("Couldn't delete roles of user with ID = "
+                    + userId, e);
         }
     }
 
@@ -160,7 +161,8 @@ public class UserDaoJdbcImpl implements UserDao {
             }
             return roles;
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't get user with ID = " + userId, e);
+            throw new DataProcessingException("Couldn't get roles of user with ID = "
+                    + userId, e);
         }
     }
 
