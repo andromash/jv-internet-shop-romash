@@ -96,7 +96,6 @@ public class UserDaoJdbcImpl implements UserDao {
         for (int i = 0; i < allUsers.size(); i++) {
             User user = allUsers.get(i);
             user.setRoles(getRolesOfUser(user.getId()));
-            allUsers.set(i, user);
         }
         return allUsers;
     }
