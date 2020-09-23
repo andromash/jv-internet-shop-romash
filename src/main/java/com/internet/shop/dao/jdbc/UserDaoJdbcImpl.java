@@ -21,7 +21,7 @@ import java.util.Set;
 public class UserDaoJdbcImpl implements UserDao {
     @Override
     public Optional<User> findByLogin(String login) {
-        ResultSet rs;
+        User user = new User();
         String query = "SELECT * FROM users u\n"
                 + "INNER JOIN users_roles ur ON u.user_id = ur.user_id\n"
                 + "INNER JOIN roles r ON ur.role_id = r.role_id\n"
@@ -29,19 +29,15 @@ public class UserDaoJdbcImpl implements UserDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, login);
-            rs = statement.executeQuery();
-
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can not get user from DB with login = " + login, e);
-        }
-        try {
+            ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                return Optional.of(extractUserFromResultSet(rs));
+                user = extractUserFromResultSet(rs);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get user from DB with login = " + login, e);
         }
-        return Optional.empty();
+        user.setRoles(getRolesOfUser(user.getId()));
+        return Optional.of(user);
     }
 
     @Override
@@ -66,25 +62,22 @@ public class UserDaoJdbcImpl implements UserDao {
 
     @Override
     public Optional<User> get(Long id) {
-        ResultSet rs;
+        User user = new User();
         String query = "SELECT * FROM users u\n"
                 + "INNER JOIN users_roles ur ON u.user_id = ur.user_id\n"
                 + "WHERE u.deleted = false AND u.user_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            rs = statement.executeQuery();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can not get user from DB with ID = " + id, e);
-        }
-        try {
+            ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                return Optional.of(extractUserFromResultSet(rs));
+                user = extractUserFromResultSet(rs);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get user from DB with ID = " + id, e);
         }
-        return Optional.empty();
+        user.setRoles(getRolesOfUser(user.getId()));
+        return Optional.of(user);
     }
 
     @Override
@@ -102,6 +95,11 @@ public class UserDaoJdbcImpl implements UserDao {
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get all users", e);
+        }
+        for (int i = 0; i < allUsers.size(); i++) {
+            User user = allUsers.get(i);
+            user.setRoles(getRolesOfUser(user.getId()));
+            allUsers.set(i, user);
         }
         return allUsers;
     }
@@ -128,7 +126,9 @@ public class UserDaoJdbcImpl implements UserDao {
             throw new DataProcessingException("Couldn't delete roles of user with ID = "
                     + user.getId(), e);
         }
-        return insertRoles(user);
+        insertRoles(user);
+        user.setRoles(getRolesOfUser(user.getId()));
+        return user;
     }
 
     @Override
@@ -144,7 +144,7 @@ public class UserDaoJdbcImpl implements UserDao {
     }
 
     private Set<Role> getRolesOfUser(Long userId) {
-        String query = "SELECT role_id, role_name FROM roles r INNER JOIN users_roles ur "
+        String query = "SELECT r.role_id, role_name FROM roles r INNER JOIN users_roles ur "
                 + "ON ur.role_id = r.role_id WHERE ur.user_id = ?";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -186,7 +186,6 @@ public class UserDaoJdbcImpl implements UserDao {
         String name = rs.getString("name");
         String login = rs.getString("login");
         String password = rs.getString("password");
-        Set<Role> roles = getRolesOfUser(userId);
-        return new User(userId, name, login, password, roles);
+        return new User(userId, name, login, password);
     }
 }

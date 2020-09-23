@@ -20,25 +20,21 @@ import java.util.Optional;
 public class ShoppingCartDaoJdbcImpl implements ShoppingCartDao {
     @Override
     public Optional<ShoppingCart> getByUser(Long userId) {
-        ResultSet rs;
+        ShoppingCart shoppingCart = new ShoppingCart();
         String query = "SELECT * FROM shopping_carts WHERE user_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, userId);
-            rs = statement.executeQuery();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can not get shopping cart from DB with user ID = "
-                    + userId, e);
-        }
-        try {
+            ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                return Optional.of(extractShoppingCartFromResultSet(rs));
+                shoppingCart = extractShoppingCartFromResultSet(rs);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get shopping cart from DB with user ID = "
                     + userId, e);
         }
-        return Optional.empty();
+        shoppingCart.setProducts(extractProductsFromShoppingCart(shoppingCart.getId()));
+        return Optional.of(shoppingCart);
     }
 
     @Override
@@ -61,7 +57,7 @@ public class ShoppingCartDaoJdbcImpl implements ShoppingCartDao {
 
     @Override
     public Optional<ShoppingCart> get(Long id) {
-        ResultSet rs;
+        ShoppingCart shoppingCart = new ShoppingCart();
         String query = "SELECT * FROM shopping_carts sc\n"
                 + "INNER JOIN shopping_carts_products scp ON sc.cart_id = scp.cart_id\n"
                 + "INNER JOIN products p ON scp.product_id = p.product_id\n"
@@ -69,41 +65,35 @@ public class ShoppingCartDaoJdbcImpl implements ShoppingCartDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            rs = statement.executeQuery();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can not get shopping cart from DB with ID = "
-                    + id, e);
-        }
-        try {
+            ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                return Optional.of(extractShoppingCartFromResultSet(rs));
+                shoppingCart = extractShoppingCartFromResultSet(rs);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get shopping cart from DB with ID = "
                     + id, e);
         }
-        return Optional.empty();
+        shoppingCart.setProducts(extractProductsFromShoppingCart(shoppingCart.getId()));
+        return Optional.of(shoppingCart);
     }
 
     @Override
     public List<ShoppingCart> getAll() {
-        ResultSet rs;
+        List<ShoppingCart> shoppingCarts = new ArrayList<>();
         String query = "SELECT * FROM shopping_carts ";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            rs = statement.executeQuery();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can not get shopping carts from DB", e);
-        }
-        try {
-            List<ShoppingCart> shoppingCarts = new ArrayList<>();
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 shoppingCarts.add(extractShoppingCartFromResultSet(rs));
             }
-            return shoppingCarts;
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get shopping carts from DB", e);
         }
+        for (ShoppingCart shoppingCart : shoppingCarts) {
+            shoppingCart.setProducts(extractProductsFromShoppingCart(shoppingCart.getId()));
+        }
+        return shoppingCarts;
     }
 
     @Override
@@ -117,7 +107,8 @@ public class ShoppingCartDaoJdbcImpl implements ShoppingCartDao {
             throw new DataProcessingException("Couldn't delete products from shopping cart - "
                     + shoppingCart, e);
         }
-        return insertProducts(shoppingCart);
+        return shoppingCart;
+
     }
 
     @Override
@@ -171,7 +162,6 @@ public class ShoppingCartDaoJdbcImpl implements ShoppingCartDao {
     private ShoppingCart extractShoppingCartFromResultSet(ResultSet resultSet) throws SQLException {
         Long cartId = resultSet.getLong("cart_id");
         Long userId = resultSet.getLong("user_id");
-        List<Product> products = extractProductsFromShoppingCart(cartId);
-        return new ShoppingCart(cartId, products, userId);
+        return new ShoppingCart(cartId, userId);
     }
 }

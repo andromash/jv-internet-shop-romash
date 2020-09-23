@@ -20,24 +20,21 @@ import java.util.Optional;
 public class OrderDaoJdbcImpl implements OrderDao {
     @Override
     public List<Order> getOrdersOfUser(Long userId) {
-        ResultSet rs;
         List<Order> orders = new ArrayList<>();
         String query = "SELECT * FROM orders WHERE user_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, userId);
-            rs = statement.executeQuery();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can not get order from DB with user ID = "
-                    + userId, e);
-        }
-        try {
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 orders.add(extractOrderFromResultSet(rs));
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get order from DB with user ID = "
                     + userId, e);
+        }
+        for(Order order : orders) {
+            order.setProducts(extractProductsFromOrder(order.getId()));
         }
         return orders;
     }
@@ -62,23 +59,20 @@ public class OrderDaoJdbcImpl implements OrderDao {
 
     @Override
     public Optional<Order> get(Long id) {
-        ResultSet rs;
+        Order order = new Order();
         String query = "SELECT * FROM orders WHERE order_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            rs = statement.executeQuery();
-        } catch (SQLException e) {
-            throw new DataProcessingException("Can not get order from DB with ID = " + id, e);
-        }
-        try {
+            ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                return Optional.of(extractOrderFromResultSet(rs));
+                order = extractOrderFromResultSet(rs);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get order from DB with ID = " + id, e);
         }
-        return Optional.empty();
+        order.setProducts(extractProductsFromOrder(order.getId()));
+        return Optional.of(order);
     }
 
     @Override
@@ -168,7 +162,6 @@ public class OrderDaoJdbcImpl implements OrderDao {
     private Order extractOrderFromResultSet(ResultSet rs) throws SQLException {
         Long orderId = rs.getLong("order_id");
         Long userId = rs.getLong("user_id");
-        List<Product> products = extractProductsFromOrder(orderId);
-        return new Order(orderId, products, userId);
+        return new Order(orderId, userId);
     }
 }
