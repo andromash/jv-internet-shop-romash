@@ -102,7 +102,7 @@ public class OrderDaoJdbcImpl implements OrderDao {
             statement.setLong(1, order.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
-            throw new DataProcessingException("Couldn't delete product from shopping cart - "
+            throw new DataProcessingException("Couldn't delete product from order - "
                     + order, e);
         }
         return insertProducts(order);
