@@ -21,6 +21,7 @@ import java.util.Set;
 public class UserDaoJdbcImpl implements UserDao {
     @Override
     public Optional<User> findByLogin(String login) {
+        ResultSet rs;
         String query = "SELECT * FROM users u\n"
                 + "INNER JOIN users_roles ur ON u.user_id = ur.user_id\n"
                 + "INNER JOIN roles r ON ur.role_id = r.role_id\n"
@@ -28,7 +29,12 @@ public class UserDaoJdbcImpl implements UserDao {
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, login);
-            ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
+
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can not get user from DB with login = " + login, e);
+        }
+        try {
             if (rs.next()) {
                 return Optional.of(extractUserFromResultSet(rs));
             }
@@ -60,13 +66,18 @@ public class UserDaoJdbcImpl implements UserDao {
 
     @Override
     public Optional<User> get(Long id) {
+        ResultSet rs;
         String query = "SELECT * FROM users u\n"
                 + "INNER JOIN users_roles ur ON u.user_id = ur.user_id\n"
                 + "WHERE u.deleted = false AND u.user_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can not get user from DB with ID = " + id, e);
+        }
+        try {
             if (rs.next()) {
                 return Optional.of(extractUserFromResultSet(rs));
             }
@@ -163,11 +174,11 @@ public class UserDaoJdbcImpl implements UserDao {
                 statement.setString(2, role.getRoleName().name());
                 statement.executeUpdate();
             }
-            user.setRoles(getRolesOfUser(user.getId()));
-            return user;
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update role of user - " + user, e);
         }
+        user.setRoles(getRolesOfUser(user.getId()));
+        return user;
     }
 
     private User extractUserFromResultSet(ResultSet rs) throws SQLException {

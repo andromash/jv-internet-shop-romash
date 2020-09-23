@@ -20,12 +20,18 @@ import java.util.Optional;
 public class OrderDaoJdbcImpl implements OrderDao {
     @Override
     public List<Order> getOrdersOfUser(Long userId) {
+        ResultSet rs;
         List<Order> orders = new ArrayList<>();
         String query = "SELECT * FROM orders WHERE user_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, userId);
-            ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can not get order from DB with user ID = "
+                    + userId, e);
+        }
+        try {
             while (rs.next()) {
                 orders.add(extractOrderFromResultSet(rs));
             }
@@ -56,12 +62,17 @@ public class OrderDaoJdbcImpl implements OrderDao {
 
     @Override
     public Optional<Order> get(Long id) {
+        ResultSet rs;
         String query = "SELECT * FROM orders WHERE order_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setLong(1, id);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
+            rs = statement.executeQuery();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can not get order from DB with ID = " + id, e);
+        }
+        try {
+            if (rs.next()) {
                 return Optional.of(extractOrderFromResultSet(rs));
             }
         } catch (SQLException e) {
@@ -73,10 +84,15 @@ public class OrderDaoJdbcImpl implements OrderDao {
     @Override
     public List<Order> getAll() {
         List<Order> orders = new ArrayList<>();
+        ResultSet rs;
         String query = "SELECT * FROM orders;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
-            ResultSet rs = statement.executeQuery();
+            rs = statement.executeQuery();
+        } catch (SQLException e) {
+            throw new DataProcessingException("Can not get orders from DB", e);
+        }
+        try {
             while (rs.next()) {
                 orders.add(extractOrderFromResultSet(rs));
             }
@@ -117,8 +133,8 @@ public class OrderDaoJdbcImpl implements OrderDao {
                 + "VALUES(?,?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(queryToUpdateProducts)) {
+            statement.setLong(1, order.getId());
             for (int i = 0; i < order.getProducts().size(); i++) {
-                statement.setLong(1, order.getId());
                 statement.setLong(2, order.getProducts().get(i).getId());
                 statement.executeUpdate();
             }
