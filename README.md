@@ -1,10 +1,10 @@
 # jv-internet-shop-romash
 
-This is project that implements idea of secured internet shop. 
-The main subject of shop is different beverages. 
+This is the project that implements idea of secured internet shop. 
+The main subject of the shop is different beverages. 
 This projects represents client - server architecture.
 
-Technologies used in this project:
+Technologies, used in this project:
 - Java 8
 - Servlets
 - Filters
@@ -18,7 +18,7 @@ Technologies used in this project:
 
 Also, I tried to keep in mind SOLID principles and RBAC
 
-Client part of this application were created via jsp - pages and basic Bootstrap
+Client part of this application was created via jsp - pages and basic Bootstrap
 
 ## Idea of the shop
 So, this shop works only with Authenticated users (Authentication is implemented via filter).
