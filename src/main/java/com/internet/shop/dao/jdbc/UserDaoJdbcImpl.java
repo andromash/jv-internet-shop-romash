@@ -21,20 +21,20 @@ import java.util.Set;
 public class UserDaoJdbcImpl implements UserDao {
     @Override
     public Optional<User> findByLogin(String login) {
-        User user = new User();
         String query = "SELECT * FROM users WHERE deleted = false AND login = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, login);
             ResultSet rs = statement.executeQuery();
             if (rs.next()) {
-                user = extractUserFromResultSet(rs);
+                User user = extractUserFromResultSet(rs);
+                user.setRoles(getRolesOfUser(user.getId()));
+                return Optional.of(user);
             }
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get user from DB with login = " + login, e);
         }
-        user.setRoles(getRolesOfUser(user.getId()));
-        return Optional.of(user);
+        return Optional.empty();
     }
 
     @Override
