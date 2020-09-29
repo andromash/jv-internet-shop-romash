@@ -112,15 +112,3 @@ CREATE TABLE internet_shop.`orders_products`
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 );
-#inserting admin with password = 11111
-INSERT INTO users(name, login, password, salt)
-VALUES ('testAdmin', 'testadmin',
-        'bf3a843c04c994ad4f481615dece5c5f6f1fd0819dec4858a033ca9d1496342d8a50b1d59ccca2fb9d60204d01f1e12a0916e9819a5f4b707957749baed0af41',
-        x'7933A240F5D3C575F330FA1141ABE849');
-INSERT INTO `internet_shop`.`users_roles`
-(
- `user_id`,
- `role_id`)
-VALUES
-(1, 1);
-
