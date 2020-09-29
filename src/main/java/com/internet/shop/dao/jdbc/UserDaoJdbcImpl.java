@@ -33,11 +33,10 @@ public class UserDaoJdbcImpl implements UserDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get user from DB with login = " + login, e);
         }
-        if (user == null) {
-            return Optional.empty();
+        if (user != null) {
+            user.setRoles(getRolesOfUser(user.getId()));
         }
-        user.setRoles(getRolesOfUser(user.getId()));
-        return Optional.of(user);
+        return Optional.ofNullable(user);
     }
 
     @Override
@@ -97,8 +96,7 @@ public class UserDaoJdbcImpl implements UserDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get all users", e);
         }
-        for (int i = 0; i < allUsers.size(); i++) {
-            User user = allUsers.get(i);
+        for (User user : allUsers) {
             user.setRoles(getRolesOfUser(user.getId()));
         }
         return allUsers;
