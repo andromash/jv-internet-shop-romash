@@ -21,7 +21,7 @@ import java.util.Set;
 public class UserDaoJdbcImpl implements UserDao {
     @Override
     public Optional<User> findByLogin(String login) {
-        User user = new User();
+        User user = null;
         String query = "SELECT * FROM users WHERE deleted = false AND login = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
@@ -33,19 +33,22 @@ public class UserDaoJdbcImpl implements UserDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get user from DB with login = " + login, e);
         }
-        user.setRoles(getRolesOfUser(user.getId()));
-        return Optional.of(user);
+        if (user != null) {
+            user.setRoles(getRolesOfUser(user.getId()));
+        }
+        return Optional.ofNullable(user);
     }
 
     @Override
     public User create(User user) {
-        String query = "INSERT INTO users(name, login, password) VALUES (?, ?, ?);";
+        String query = "INSERT INTO users(name, login, password, salt) VALUES (?, ?, ?, ?);";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(
                         query, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getLogin());
             statement.setString(3, user.getPassword());
+            statement.setBytes(4, user.getSalt());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -93,8 +96,7 @@ public class UserDaoJdbcImpl implements UserDao {
         } catch (SQLException e) {
             throw new DataProcessingException("Can not get all users", e);
         }
-        for (int i = 0; i < allUsers.size(); i++) {
-            User user = allUsers.get(i);
+        for (User user : allUsers) {
             user.setRoles(getRolesOfUser(user.getId()));
         }
         return allUsers;
@@ -102,13 +104,15 @@ public class UserDaoJdbcImpl implements UserDao {
 
     @Override
     public User update(User user) {
-        String query = "UPDATE users SET name = ?, login = ?, password = ? WHERE user_id = ?;";
+        String query = "UPDATE users SET name = ?, login = ?, password = ?, salt = ?"
+                + " WHERE user_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getLogin());
             statement.setString(3, user.getPassword());
-            statement.setLong(4, user.getId());
+            statement.setBytes(4, user.getSalt());
+            statement.setLong(5, user.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update user " + user, e);
@@ -187,6 +191,9 @@ public class UserDaoJdbcImpl implements UserDao {
         String name = rs.getString("name");
         String login = rs.getString("login");
         String password = rs.getString("password");
-        return new User(userId, name, login, password);
+        byte[] salt = rs.getBytes("salt");
+        User user = new User(userId, name, login, password);
+        user.setSalt(salt);
+        return user;
     }
 }
