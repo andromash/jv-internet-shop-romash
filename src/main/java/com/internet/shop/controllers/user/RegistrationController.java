@@ -6,6 +6,7 @@ import com.internet.shop.model.ShoppingCart;
 import com.internet.shop.model.User;
 import com.internet.shop.service.ShoppingCartService;
 import com.internet.shop.service.UserService;
+import com.internet.shop.util.HashUtil;
 import java.io.IOException;
 import java.util.Set;
 import javax.servlet.ServletException;
@@ -41,7 +42,9 @@ public class RegistrationController extends HttpServlet {
             return;
         }
         if (password.equals(passwordRepeated)) {
-            User user = new User(name, login, password);
+            byte[] salt = HashUtil.getSalt();
+            password = HashUtil.hashPassword(password, salt);
+            User user = new User(name, login, password, salt);
             user.setRoles(Set.of(Role.of("USER")));
             User userWithId = userService.create(user);
             ShoppingCart shoppingCart = new ShoppingCart(userWithId.getId());

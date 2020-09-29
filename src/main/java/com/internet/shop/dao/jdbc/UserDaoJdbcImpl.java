@@ -102,13 +102,15 @@ public class UserDaoJdbcImpl implements UserDao {
 
     @Override
     public User update(User user) {
-        String query = "UPDATE users SET name = ?, login = ?, password = ? WHERE user_id = ?;";
+        String query = "UPDATE users SET name = ?, login = ?, password = ?, salt = ?"
+                + " WHERE user_id = ?;";
         try (Connection connection = ConnectionUtil.getConnection();
                 PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, user.getName());
             statement.setString(2, user.getLogin());
             statement.setString(3, user.getPassword());
-            statement.setLong(4, user.getId());
+            statement.setBytes(4, user.getSalt());
+            statement.setLong(5, user.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new DataProcessingException("Couldn't update user " + user, e);
@@ -187,6 +189,7 @@ public class UserDaoJdbcImpl implements UserDao {
         String name = rs.getString("name");
         String login = rs.getString("login");
         String password = rs.getString("password");
-        return new User(userId, name, login, password);
+        byte[] salt = rs.getBytes("salt");
+        return new User(userId, name, login, password, salt);
     }
 }
