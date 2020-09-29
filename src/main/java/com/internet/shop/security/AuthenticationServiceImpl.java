@@ -22,7 +22,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userFromDB.get();
     }
 
-    private static boolean isNotValid(String password, User userFromDB) {
+    private boolean isNotValid(String password, User userFromDB) {
         return !HashUtil.hashPassword(password, userFromDB.getSalt())
                 .equals(userFromDB.getPassword());
     }
