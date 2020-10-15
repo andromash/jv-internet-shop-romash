@@ -2,6 +2,8 @@
 
 This is the project that implements the idea of an internet shop specializing in beverages. 
 This project, which represents the client-server architecture, was build following the N-tier architecture and has a DAO layer, a Service layer, and Controllers. I built this project with SOLID principles and RBAC in mind. The client side of this application was created with JSP-pages and Bootstrap.
+Also, I tried to keep in mind SOLID principles and RBAC.
+Client part of this application was created via jsp - pages and basic Bootstrap
 
 Technologies used in this project:
 - Java 8
@@ -14,10 +16,6 @@ Technologies used in this project:
 - DAO pattern
 - MySQL
 - JDBC
-
-Also, I tried to keep in mind SOLID principles and RBAC
-
-Client part of this application was created via jsp - pages and basic Bootstrap
 
 ## Idea of the shop
 Only authenticated users can use the full functionality of the shop. Authentication is implemented via a filter.
