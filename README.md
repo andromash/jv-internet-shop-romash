@@ -42,9 +42,9 @@ login: testAdmin
 password: 1111
 
 But first of all, there's file init_db.sql which holds sql script for creating appropriate DB.
-So run this code in MySQL on your machine first. You need to change name and password
-in ConnectionUtil so this code will run on your MySQL Server.
-Also this projects runs in Apache Tomcat. So you need to configure it.
-Maven is used as packaging tool, so you need to enable import all of the dependencies and plugins.
+To launch the project, download the project onto your machine and make sure you have MySQL Workbench on it. The file `init_db.sql` holds the SQL script for creating the DB for this project - you need to run the code from this file in MySQL Workbench first. Then you need to change the name and password
+in `ConnectionUtil` so this code will run on your MySQL Server.
+This project runs on Apache Tomcat, so you will need to configure it as well.
+Maven is used as the packaging tool, and you need to enable the import all of the dependencies and plugins.
 
 Project was made by Andrii Romash https://github.com/andromash
