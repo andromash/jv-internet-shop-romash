@@ -1,8 +1,7 @@
 # jv-internet-shop-romash
 
 This is the project that implements the idea of an internet shop specializing in beverages. 
-This projects represents client - server architecture.
-Also this projects was build on N-tier architecture. So we have DAO layer, Service layer, Controller.
+This project, which represents the client-server architecture, was build following the N-tier architecture and has a DAO layer, a Service layer, and Controllers. I built this project with SOLID principles and RBAC in mind. The client side of this application was created with JSP-pages and Bootstrap.
 
 Technologies, used in this project:
 - Java 8
