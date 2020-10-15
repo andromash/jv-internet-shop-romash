@@ -1,7 +1,6 @@
 # jv-internet-shop-romash
 
-This is the project that implements idea of secured internet shop. 
-The main subject of the shop is different beverages. 
+This is the project that implements the idea of an internet shop specializing in beverages. 
 This projects represents client - server architecture.
 Also this projects was build on N-tier architecture. So we have DAO layer, Service layer, Controller.
 
