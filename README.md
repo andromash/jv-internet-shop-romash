@@ -35,3 +35,12 @@ role, set by system administrator, can delete user, see all users, see all order
 add product, delete product. Admin does not have a cart and can not create order.
 
 Also, it is predicted that roles can be combined. So if user has two roles - it can do both.
+
+If you want to enter as Admin, there's address /admin/add  which will add new user with Admin's role
+
+login: testAdmin
+
+password: 1111
+
+But first of all, there's file init_db.sql which holds sql script for creating appropriate DB.
+So run this code in MySQL in your machine first
