@@ -30,7 +30,8 @@ Every user has one shopping cart. Users can add products to their cart and then 
 
 This role is supposed to be assigned manually by the system administrator. An admin can see all users, delete a user, see all orders, delete an order, add products, and delete products. An admin does not have a cart and cannot place an order.
 The project also allows for a combination of the two roles -  if a user has two roles, they can perform all of the actions described for both roles.
-If you want to log in as an Admin, open the .../admin/add link in your browser, and a new user with Admin's role will be created with the following login and password:
+If you want to log in as an Admin, open the .../admin/add link in your browser, and a new user with Admin's role will be created with the following login and password: 
+'testAdmin', '1111'
 
 Also, it is predicted that roles can be combined. So if a user has two roles - they can perform both sets of actions.
 
