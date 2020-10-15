@@ -3,6 +3,7 @@
 This is the project that implements idea of secured internet shop. 
 The main subject of the shop is different beverages. 
 This projects represents client - server architecture.
+Also this projects was build on N-tier architecture. So we have DAO layer, Service layer, Controller.
 
 Technologies, used in this project:
 - Java 8
@@ -43,4 +44,7 @@ login: testAdmin
 password: 1111
 
 But first of all, there's file init_db.sql which holds sql script for creating appropriate DB.
-So run this code in MySQL on your machine first
+So run this code in MySQL on your machine first. Also this projects runs in Apache Tomcat.
+Also project uses Maven as build tool, so you need to enable import all of the dependencies and plugins
+
+Project was made by Andrii Romash https://github.com/andromash
