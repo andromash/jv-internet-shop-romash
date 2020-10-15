@@ -43,4 +43,4 @@ login: testAdmin
 password: 1111
 
 But first of all, there's file init_db.sql which holds sql script for creating appropriate DB.
-So run this code in MySQL in your machine first
+So run this code in MySQL on your machine first
